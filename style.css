@@ -1,0 +1,67 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ffebee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden; /* Prevents scrollbars if the button moves near the edge */
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #d32f2f;
+    font-size: 2.5rem;
+}
+
+#try-again {
+    color: #c2185b;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.btn-wrapper {
+    position: relative;
+    height: 100px; /* Space for the moving button */
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#yes-btn {
+    background-color: #4caf50;
+    color: white;
+}
+
+#no-btn {
+    background-color: #f44336;
+    color: white;
+    position: absolute; /* Crucial for moving it around */
+}
+
+.responsive-gif {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+    h1 { font-size: 1.8rem; }
+}
