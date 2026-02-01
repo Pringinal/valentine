@@ -4,27 +4,46 @@ const tryAgainText = document.getElementById('try-again');
 const questionSection = document.getElementById('question-section');
 const successSection = document.getElementById('success-section');
 
-// Function to move the "No" button to a random position
-noBtn.addEventListener('mouseover', () => {
-    // Show the "Try again" message
+noBtn.addEventListener('mouseover', moveButton);
+noBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // Prevents mobile "ghost clicks"
+    moveButton();
+});
+
+function moveButton() {
     tryAgainText.style.display = 'block';
 
-    // Calculate random coordinates within the screen bounds
-    // Subtracting button width/height to keep it within view
-    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+    const yesRect = yesBtn.getBoundingClientRect();
+    const padding = 50; // Minimum distance in pixels from the Yes button
 
-    noBtn.style.left = `${x}px`;
-    noBtn.style.top = `${y}px`;
-    noBtn.style.position = 'fixed'; // Overrides the relative wrapper
-});
+    let newX, newY;
+    let isOverlapping = true;
 
-// For mobile users who tap "No"
-noBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-});
+    // Keep generating coordinates until we find a spot far enough from Yes
+    while (isOverlapping) {
+        newX = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+        newY = Math.random() * (window.innerHeight - noBtn.offsetHeight);
 
-// Handle the "Yes" click
+        // Define the "Forbidden Zone" around the Yes button
+        const forbiddenMinX = yesRect.left - padding;
+        const forbiddenMaxX = yesRect.right + padding;
+        const forbiddenMinY = yesRect.top - padding;
+        const forbiddenMaxY = yesRect.bottom + padding;
+
+        // Check if the new random coordinates fall inside the forbidden zone
+        const hitsX = newX > forbiddenMinX && newX < forbiddenMaxX;
+        const hitsY = newY > forbiddenMinY && newY < forbiddenMaxY;
+
+        if (!(hitsX && hitsY)) {
+            isOverlapping = false;
+        }
+    }
+
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = `${newX}px`;
+    noBtn.style.top = `${newY}px`;
+}
+
 yesBtn.addEventListener('click', () => {
     questionSection.style.display = 'none';
     successSection.style.display = 'block';
