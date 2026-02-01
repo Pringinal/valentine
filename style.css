@@ -23,7 +23,9 @@ h1 {
 #try-again {
     color: #c2185b;
     font-weight: bold;
+    height: 24px; /* Reserves space for the text */
     margin-bottom: 15px;
+    font-size: 1.1rem;
 }
 
 .btn-wrapper {
