@@ -4,45 +4,53 @@ const tryAgainText = document.getElementById('try-again');
 const questionSection = document.getElementById('question-section');
 const successSection = document.getElementById('success-section');
 
-noBtn.addEventListener('mouseover', moveButton);
-noBtn.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // Prevents mobile "ghost clicks"
-    moveButton();
-});
-
+// This function handles the "Escape" logic
 function moveButton() {
     tryAgainText.style.display = 'block';
 
     const yesRect = yesBtn.getBoundingClientRect();
-    const padding = 50; // Minimum distance in pixels from the Yes button
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
 
     let newX, newY;
-    let isOverlapping = true;
+    let isSafe = false;
 
-    // Keep generating coordinates until we find a spot far enough from Yes
-    while (isOverlapping) {
-        newX = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-        newY = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+    // Try up to 50 times to find a spot that doesn't overlap with Yes
+    for (let i = 0; i < 50; i++) {
+        // Generate coordinates (with 20px padding from screen edges)
+        newX = Math.random() * (window.innerWidth - btnWidth - 40) + 20;
+        newY = Math.random() * (window.innerHeight - btnHeight - 40) + 20;
 
-        // Define the "Forbidden Zone" around the Yes button
-        const forbiddenMinX = yesRect.left - padding;
-        const forbiddenMaxX = yesRect.right + padding;
-        const forbiddenMinY = yesRect.top - padding;
-        const forbiddenMaxY = yesRect.bottom + padding;
+        // Create a "No-Go" zone around the Yes button (100px buffer)
+        const buffer = 100;
+        const forbiddenMinX = yesRect.left - buffer;
+        const forbiddenMaxX = yesRect.right + buffer;
+        const forbiddenMinY = yesRect.top - buffer;
+        const forbiddenMaxY = yesRect.bottom + buffer;
 
-        // Check if the new random coordinates fall inside the forbidden zone
+        // Check if the new X and Y are outside that forbidden box
         const hitsX = newX > forbiddenMinX && newX < forbiddenMaxX;
         const hitsY = newY > forbiddenMinY && newY < forbiddenMaxY;
 
-        if (!(hitsX && hitsY)) {
-            isOverlapping = false;
+        if (!hitsX || !hitsY) {
+            isSafe = true;
+            break;
         }
     }
 
+    // Apply the coordinates
     noBtn.style.position = 'fixed';
-    noBtn.style.left = `${newX}px`;
-    noBtn.style.top = `${newY}px`;
+    noBtn.style.left = newX + 'px';
+    noBtn.style.top = newY + 'px';
+    noBtn.style.zIndex = '1000'; // Ensure it's always on top of other elements
 }
+
+// Mouse for Desktop, Touchstart for Phone
+noBtn.addEventListener('mouseover', moveButton);
+noBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault(); // This is the magic line that stops the "click" from happening
+    moveButton();
+});
 
 yesBtn.addEventListener('click', () => {
     questionSection.style.display = 'none';
