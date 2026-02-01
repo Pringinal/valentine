@@ -13,7 +13,8 @@ const messages = [
     "Wrong button! ❌",
     "You're persistent, I'll give you that!",
     "Just click Yes already! 🥺",
-    "Calculated escape! 🤖"
+    "Calculated escape! 🤖",
+    "Uffff yaaaa 😩",
 ];
 
 let messageIndex = 0;
